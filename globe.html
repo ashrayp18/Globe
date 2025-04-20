@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interactive Globe</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #globeViz {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+</head>
+<body>
+  <div id="globeViz"></div>
+  <script>
+    const locations = [
+      { lat: 37.7749, lng: -122.4194, name: 'United States' },
+      { lat: 51.5074, lng: -0.1278, name: 'United Kingdom' },
+      { lat: 25.2048, lng: 55.2708, name: 'United Arab Emirates' },
+      { lat: 28.6139, lng: 77.2090, name: 'India' }
+    ];
+
+    const world = Globe()(document.getElementById('globeViz'))
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+      .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+      .backgroundColor('#000000')
+      .pointLat('lat')
+      .pointLng('lng')
+      .pointColor(() => 'red')
+      .pointAltitude(0.02)
+      .pointLabel(d => d.name)
+      .pointsData(locations);
+
+    world.controls().autoRotate = true;
+    world.controls().autoRotateSpeed = 0.6;
+  </script>
+</body>
+</html>
