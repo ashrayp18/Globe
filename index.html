@@ -9,12 +9,14 @@
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background: white; /* Page background */
+      background: white; /* Ensure the body is white */
     }
     #globeViz {
       width: 100%;
       height: 100%;
-      background: white; /* Fallback */
+    }
+    canvas {
+      background-color: transparent !important; /* Forces canvas transparency */
     }
   </style>
   <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
@@ -30,12 +32,10 @@
       { lat: 28.6139, lng: 77.2090, name: 'India' }
     ];
 
-    const globeContainer = document.getElementById('globeViz');
-
-    const world = Globe()(globeContainer)
+    const world = Globe()(document.getElementById('globeViz'))
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-      .backgroundColor(null) // Disable built-in black background
+      .backgroundColor(null) // Transparent background
       .pointLat('lat')
       .pointLng('lng')
       .pointColor(() => 'red')
@@ -43,17 +43,11 @@
       .pointLabel(d => d.name)
       .pointsData(locations);
 
-    // Set auto-rotate
+    // Optional: make canvas background transparent for real
+    world.renderer().setClearColor(0x000000, 0); // Transparent background
+
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 0.6;
-
-    // Wait for renderer to be ready, then override background
-    setTimeout(() => {
-      const renderer = world.renderer();
-      if (renderer) {
-        renderer.setClearColor('white', 1); // White background
-      }
-    }, 100); // slight delay ensures renderer is initialized
   </script>
 </body>
 </html>
