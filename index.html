@@ -9,17 +9,10 @@
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background-color: transparent; /* Ensure body is transparent */
     }
-
     #globeViz {
       width: 100%;
       height: 100%;
-      background-color: transparent; /* Remove background here too */
-    }
-
-    canvas {
-      background-color: transparent !important; /* Force transparency for canvas */
     }
   </style>
   <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
@@ -35,12 +28,10 @@
       { lat: 28.6139, lng: 77.2090, name: 'India' }
     ];
 
-    const world = Globe()(document.getElementById('globeViz'), {
-      rendererConfig: { alpha: true } // This enables transparency!
-    })
+    const world = Globe()(document.getElementById('globeViz'))
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-      .backgroundColor(null) // Set background to null to make it transparent
+      .backgroundColor('#000000')
       .pointLat('lat')
       .pointLng('lng')
       .pointColor(() => 'red')
