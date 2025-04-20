@@ -9,12 +9,12 @@
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background: white;
+      background: white; /* Page background */
     }
     #globeViz {
       width: 100%;
       height: 100%;
-      background: white;
+      background: white; /* Fallback */
     }
   </style>
   <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
@@ -35,7 +35,7 @@
     const world = Globe()(globeContainer)
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-      .backgroundColor('white') // Set to white to match page background
+      .backgroundColor(null) // Disable built-in black background
       .pointLat('lat')
       .pointLng('lng')
       .pointColor(() => 'red')
@@ -43,9 +43,17 @@
       .pointLabel(d => d.name)
       .pointsData(locations);
 
-    // Optional auto-rotate
+    // Set auto-rotate
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 0.6;
+
+    // Wait for renderer to be ready, then override background
+    setTimeout(() => {
+      const renderer = world.renderer();
+      if (renderer) {
+        renderer.setClearColor('white', 1); // White background
+      }
+    }, 100); // slight delay ensures renderer is initialized
   </script>
 </body>
 </html>
