@@ -25,7 +25,8 @@
       { lat: 37.7749, lng: -122.4194, name: 'United States' },
       { lat: 51.5074, lng: -0.1278, name: 'United Kingdom' },
       { lat: 25.2048, lng: 55.2708, name: 'United Arab Emirates' },
-      { lat: 28.6139, lng: 77.2090, name: 'India' }
+      { lat: 28.6139, lng: 77.2090, name: 'India' },
+      { lat: -25.2744, lng: 133.7751, name: 'Australia' } // New location
     ];
 
     const world = Globe()(document.getElementById('globeViz'))
@@ -35,10 +36,19 @@
       .pointLat('lat')
       .pointLng('lng')
       .pointColor(() => 'red')
-      .pointAltitude(0.02)
+      .pointAltitude(0.05) // Increased pin height
       .pointLabel(d => d.name)
       .pointsData(locations);
 
+    // Optional: Add lighting for glow effect (if needed)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1);
+    world.scene().add(directionalLight);
+
+    const ambientLight = new THREE.AmbientLight(0xbbbbbb);
+    world.scene().add(ambientLight);
+
+    // Globe rotation
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 0.6;
   </script>
