@@ -26,7 +26,7 @@
       { lat: 51.5074, lng: -0.1278, name: 'United Kingdom' },
       { lat: 25.2048, lng: 55.2708, name: 'United Arab Emirates' },
       { lat: 28.6139, lng: 77.2090, name: 'India' },
-      { lat: -25.2744, lng: 133.7751, name: 'Australia' }
+      { lat: -25.2744, lng: 133.7751, name: 'Australia' } // New location
     ];
 
     const world = Globe()(document.getElementById('globeViz'))
@@ -35,20 +35,12 @@
       .backgroundColor('#000000')
       .pointLat('lat')
       .pointLng('lng')
+      .pointColor(() => 'red')
+      .pointAltitude(0.05) // Increased pin height
       .pointLabel(d => d.name)
-      .pointsData(locations)
-      .customThreeObject((d) => {
-        const pinTexture = new THREE.TextureLoader().load('https://cdn-icons-png.flaticon.com/512/684/684908.png');
-        const spriteMaterial = new THREE.SpriteMaterial({ map: pinTexture });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        sprite.scale.set(0.5, 0.5, 1); // adjust size of marker here
-        return sprite;
-      })
-      .customThreeObjectUpdate((obj, d) => {
-        obj.lookAt(world.camera().position);
-      });
+      .pointsData(locations);
 
-    // Lighting
+    // Optional: Add lighting for glow effect (if needed)
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(1, 1, 1);
     world.scene().add(directionalLight);
@@ -56,7 +48,7 @@
     const ambientLight = new THREE.AmbientLight(0xbbbbbb);
     world.scene().add(ambientLight);
 
-    // Auto-rotate
+    // Globe rotation
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 0.6;
   </script>
