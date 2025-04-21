@@ -26,39 +26,32 @@
       { lat: 51.5074, lng: -0.1278, name: 'United Kingdom' },
       { lat: 25.2048, lng: 55.2708, name: 'United Arab Emirates' },
       { lat: 28.6139, lng: 77.2090, name: 'India' },
-      { lat: -25.2744, lng: 133.7751, name: 'Australia' }
+      { lat: -25.2744, lng: 133.7751, name: 'Australia' } // Added Australia
     ];
 
     const world = Globe()(document.getElementById('globeViz'))
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-      .backgroundColor('#000000')
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointLabel(d => d.name)
-      .pointsData(locations)
-      .customThreeObject((d) => {
-        const pinTexture = new THREE.TextureLoader().load('https://cdn-icons-png.flaticon.com/512/684/684908.png');
-        const spriteMaterial = new THREE.SpriteMaterial({ map: pinTexture });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        sprite.scale.set(0.5, 0.5, 1); // adjust size of marker here
-        return sprite;
-      })
-      .customThreeObjectUpdate((obj, d) => {
-        obj.lookAt(world.camera().position);
-      });
+      .backgroundColor('#000000');
 
-    // Lighting
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
-    world.scene().add(directionalLight);
-
-    const ambientLight = new THREE.AmbientLight(0xbbbbbb);
-    world.scene().add(ambientLight);
-
-    // Auto-rotate
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 0.6;
+
+    // Load globe first, then add pins
+    world.onGlobeReady(() => {
+      const globeRadius = world.getGlobeRadius();
+      const spriteMap = new THREE.TextureLoader().load('https://cdn-icons-png.flaticon.com/512/684/684908.png');
+      const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+
+      locations.forEach(loc => {
+        const sprite = new THREE.Sprite(spriteMaterial.clone());
+        sprite.scale.set(0.5, 0.5, 1); // Adjust size here
+        const phi = (90 - loc.lat) * (Math.PI / 180);
+        const theta = (loc.lng + 180) * (Math.PI / 180);
+        sprite.position.setFromSphericalCoords(globeRadius + 1, phi, theta);
+        world.scene().add(sprite);
+      });
+    });
   </script>
 </body>
 </html>
